@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ProyectoDes4_5.Interfaz;
-using ProyectoDes4_5.Models;
-using ProyectoDes4_5.Repositorio;
+using ModelAsignaciones = ProyectoDes4_5.Models.Asignaciones; 
+using RepoAsignaciones = ProyectoDes4_5.Repositorio.Asignaciones;  
 using System.Linq;
 
 namespace ProyectoDes4_5.Controllers
@@ -19,7 +19,7 @@ namespace ProyectoDes4_5.Controllers
         public IActionResult Index()
         {
             var asignaciones = _asignacionesRepository.GetAllAsignaciones()
-                .Select(a => new AsignacionesModels
+                .Select(a => new ModelAsignaciones  // Usar alias ModelAsignaciones
                 {
                     AssignmentId = a.AssignmentId,
                     TicketId = a.TicketId,
@@ -37,7 +37,7 @@ namespace ProyectoDes4_5.Controllers
             if (asignacion == null)
                 return NotFound();
 
-            var model = new AsignacionesModels
+            var model = new ModelAsignaciones  // Usar alias ModelAsignaciones
             {
                 AssignmentId = asignacion.AssignmentId,
                 TicketId = asignacion.TicketId,
@@ -56,11 +56,11 @@ namespace ProyectoDes4_5.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(AsignacionesModels model)
+        public IActionResult Create(ModelAsignaciones model)  // Usar alias ModelAsignaciones
         {
             if (ModelState.IsValid)
             {
-                var asignacion = new Asignaciones
+                var asignacion = new RepoAsignaciones  // Usar alias RepoAsignaciones
                 {
                     TicketId = model.TicketId,
                     OperatorId = model.OperatorId,
@@ -80,7 +80,7 @@ namespace ProyectoDes4_5.Controllers
             if (asignacion == null)
                 return NotFound();
 
-            var model = new AsignacionesModels
+            var model = new ModelAsignaciones  // Usar alias ModelAsignaciones
             {
                 AssignmentId = asignacion.AssignmentId,
                 TicketId = asignacion.TicketId,
@@ -93,14 +93,14 @@ namespace ProyectoDes4_5.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, AsignacionesModels model)
+        public IActionResult Edit(int id, ModelAsignaciones model)  // Usar alias ModelAsignaciones
         {
             if (id != model.AssignmentId)
                 return NotFound();
 
             if (ModelState.IsValid)
             {
-                var asignacion = new Asignaciones
+                var asignacion = new RepoAsignaciones  // Usar alias RepoAsignaciones
                 {
                     AssignmentId = model.AssignmentId,
                     TicketId = model.TicketId,
@@ -121,7 +121,7 @@ namespace ProyectoDes4_5.Controllers
             if (asignacion == null)
                 return NotFound();
 
-            var model = new AsignacionesModels
+            var model = new ModelAsignaciones  // Usar alias ModelAsignaciones
             {
                 AssignmentId = asignacion.AssignmentId,
                 TicketId = asignacion.TicketId,
