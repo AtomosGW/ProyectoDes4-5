@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ProyectoDes4_5.Interfaz;
-using ModelAsignaciones = ProyectoDes4_5.Models.Asignaciones; 
-using RepoAsignaciones = ProyectoDes4_5.Repositorio.Asignaciones;  
+using ModelAsignaciones = ProyectoDes4_5.Models.Asignaciones;
+using ProyectoDes4_5.Repositorio;
 using System.Linq;
 
 namespace ProyectoDes4_5.Controllers
@@ -56,11 +56,11 @@ namespace ProyectoDes4_5.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(ModelAsignaciones model)  // Usar alias ModelAsignaciones
+        public IActionResult Create(ModelAsignaciones model)  
         {
             if (ModelState.IsValid)
             {
-                var asignacion = new RepoAsignaciones  // Usar alias RepoAsignaciones
+                var asignacion = new AsignacionesRepository  
                 {
                     TicketId = model.TicketId,
                     OperatorId = model.OperatorId,

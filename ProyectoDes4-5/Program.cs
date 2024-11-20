@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
-using ProyectoDes4_5.BD;
+using ProyectoDes4_5.BD;  // Asegúrate de tener el namespace correcto
 using ProyectoDes4_5.Repositorio;
 using ProyectoDes4_5.Interfaz;
 
