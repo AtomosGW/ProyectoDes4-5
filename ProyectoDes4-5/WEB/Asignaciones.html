@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asignaciones</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Asignaciones</h1>
+
+        <!-- Botón para agregar asignación -->
+        <button id="createBtn">Crear Nueva Asignación</button>
+
+        <!-- Lista de Asignaciones -->
+        <table id="asignacionesTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Ticket ID</th>
+                    <th>Operator ID</th>
+                    <th>Asignado En</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Aquí se llenará la tabla con datos -->
+            </tbody>
+        </table>
+
+        <!-- Formulario para crear o editar asignación -->
+        <div id="formContainer" style="display:none;">
+            <h2 id="formTitle">Crear Asignación</h2>
+            <form id="asignacionForm">
+                <input type="hidden" id="assignmentId" />
+                <label for="ticketId">Ticket ID:</label>
+                <input type="number" id="ticketId" required><br><br>
+
+                <label for="operatorId">Operator ID:</label>
+                <input type="number" id="operatorId" required><br><br>
+
+                <label for="assignedAt">Asignado En:</label>
+                <input type="datetime-local" id="assignedAt" required><br><br>
+
+                <button type="submit" id="submitBtn">Crear Asignación</button>
+                <button type="button" id="cancelBtn">Cancelar</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
