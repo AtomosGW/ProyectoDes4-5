@@ -1,61 +1,143 @@
-using System;
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using ProyectoDes4_5.Interfaz;
 using ProyectoDes4_5.Models;
+using ProyectoDes4_5.Repositorio;
+using System.Linq;
 
 namespace ProyectoDes4_5.Controllers
 {
-
-    [ApiController]
-    [Route("[controller]")]
-    public class AsignacionesController : ControllerBase
+    public class AsignacionesController : Controller
     {
-        private readonly IAsignacionesRepository _repository;
+        private readonly IAsignacionesRepository _asignacionesRepository;
 
-        public AsignacionesController(IAsignacionesRepository repository)
+        public AsignacionesController(IAsignacionesRepository asignacionesRepository)
         {
-            _repository = repository;
+            _asignacionesRepository = asignacionesRepository;
         }
 
-        [HttpGet]
-        public IActionResult GetAll()
+        // Mostrar todas las asignaciones
+        public IActionResult Index()
         {
-            return Ok(_repository.GetAllAsignaciones());
+            var asignaciones = _asignacionesRepository.GetAllAsignaciones()
+                .Select(a => new AsignacionesModels
+                {
+                    AssignmentId = a.AssignmentId,
+                    TicketId = a.TicketId,
+                    OperatorId = a.OperatorId,
+                    AssignedAt = a.AssignedAt
+                }).ToList();
+
+            return View(asignaciones);
         }
 
-        [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        // Ver detalles de una asignación
+        public IActionResult Details(int id)
         {
-            var asignacion = _repository.GetAsignacionById(id);
+            var asignacion = _asignacionesRepository.GetAsignacionById(id);
             if (asignacion == null)
                 return NotFound();
 
-            return Ok(asignacion);
+            var model = new AsignacionesModels
+            {
+                AssignmentId = asignacion.AssignmentId,
+                TicketId = asignacion.TicketId,
+                OperatorId = asignacion.OperatorId,
+                AssignedAt = asignacion.AssignedAt
+            };
+
+            return View(model);
+        }
+
+        // Crear nueva asignación
+        public IActionResult Create()
+        {
+            return View();
         }
 
         [HttpPost]
-        public IActionResult Create(Asignaciones asignacion)
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(AsignacionesModels model)
         {
-            _repository.InsertAsignacion(asignacion);
-            return CreatedAtAction(nameof(GetById), new { id = asignacion.AssignmentId }, asignacion);
+            if (ModelState.IsValid)
+            {
+                var asignacion = new Asignaciones
+                {
+                    TicketId = model.TicketId,
+                    OperatorId = model.OperatorId,
+                    AssignedAt = model.AssignedAt
+                };
+
+                _asignacionesRepository.InsertAsignacion(asignacion);
+                return RedirectToAction(nameof(Index));
+            }
+            return View(model);
         }
 
-        [HttpPut("{id}")]
-        public IActionResult Update(int id, Asignaciones asignacion)
+        // Editar asignación
+        public IActionResult Edit(int id)
         {
-            if (id != asignacion.AssignmentId)
-                return BadRequest();
+            var asignacion = _asignacionesRepository.GetAsignacionById(id);
+            if (asignacion == null)
+                return NotFound();
 
-            _repository.UpdateAsignacion(asignacion);
-            return NoContent();
+            var model = new AsignacionesModels
+            {
+                AssignmentId = asignacion.AssignmentId,
+                TicketId = asignacion.TicketId,
+                OperatorId = asignacion.OperatorId,
+                AssignedAt = asignacion.AssignedAt
+            };
+
+            return View(model);
         }
 
-        [HttpDelete("{id}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, AsignacionesModels model)
+        {
+            if (id != model.AssignmentId)
+                return NotFound();
+
+            if (ModelState.IsValid)
+            {
+                var asignacion = new Asignaciones
+                {
+                    AssignmentId = model.AssignmentId,
+                    TicketId = model.TicketId,
+                    OperatorId = model.OperatorId,
+                    AssignedAt = model.AssignedAt
+                };
+
+                _asignacionesRepository.UpdateAsignacion(asignacion);
+                return RedirectToAction(nameof(Index));
+            }
+            return View(model);
+        }
+
+        // Eliminar asignación
         public IActionResult Delete(int id)
         {
-            _repository.DeleteAsignacion(id);
-            return NoContent();
+            var asignacion = _asignacionesRepository.GetAsignacionById(id);
+            if (asignacion == null)
+                return NotFound();
+
+            var model = new AsignacionesModels
+            {
+                AssignmentId = asignacion.AssignmentId,
+                TicketId = asignacion.TicketId,
+                OperatorId = asignacion.OperatorId,
+                AssignedAt = asignacion.AssignedAt
+            };
+
+            return View(model);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteConfirmed(int id)
+        {
+            _asignacionesRepository.DeleteAsignacion(id);
+            return RedirectToAction(nameof(Index));
         }
     }
-
 }

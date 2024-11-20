@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ProyectoDes4_5.Models
+namespace ProyectoDes4_5.Repositorio
 {
     public class Asignaciones
     {
