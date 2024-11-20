@@ -1,0 +1,50 @@
+﻿@model IEnumerable<ProyectoDes4_5.Models>
+
+
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Asignaciones</title>
+        <script src="~/WEB/script/script.js"></script>
+        <link rel="stylesheet" href="~/WEB/estilo/estilo.css">
+    </head>
+    <body>
+        <div class="container">
+            <h1>Asignaciones</h1>
+
+            <!-- Botón para agregar asignación -->
+            <button id="createBtn">Crear Nueva Asignación</button>
+
+            <!-- Lista de Asignaciones -->
+            <table id="asignacionesTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Ticket ID</th>
+                        <th>Operator ID</th>
+                        <th>Asignado En</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var asignacion in Model)
+                    {
+                    <tr>
+                        <td>@asignacion.AssignmentId</td>
+                        <td>@asignacion.TicketId</td>
+                        <td>@asignacion.OperatorId</td>
+                        <td>@asignacion.AssignedAt</td>
+                        <td>
+                            <!-- Botones para editar o eliminar -->
+                            <button onclick="editAsignacion(@asignacion.AssignmentId)">Editar</button>
+                            <button onclick="deleteAsignacion(@asignacion.AssignmentId)">Eliminar</button>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>

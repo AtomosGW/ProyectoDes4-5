@@ -1,5 +1,5 @@
 ﻿// Variables globales
-const apiUrl = '/api/asignaciones';  // URL de la API que manejará las asignaciones
+const apiUrl = 'https://localhost:7071/api/asignaciones'; // Cambié la URL para que sea correcta
 const asignacionesTable = document.getElementById('asignacionesTable').getElementsByTagName('tbody')[0];
 const createBtn = document.getElementById('createBtn');
 const formContainer = document.getElementById('formContainer');
@@ -68,7 +68,8 @@ asignacionForm.addEventListener('submit', (event) => {
             .then(() => {
                 loadAsignaciones();
                 formContainer.style.display = 'none';
-            });
+            })
+            .catch(error => console.error('Error al actualizar asignación:', error));
     } else {
         // Crear nueva asignación
         fetch(apiUrl, {
@@ -79,7 +80,8 @@ asignacionForm.addEventListener('submit', (event) => {
             .then(() => {
                 loadAsignaciones();
                 formContainer.style.display = 'none';
-            });
+            })
+            .catch(error => console.error('Error al crear asignación:', error));
     }
 });
 
@@ -94,7 +96,8 @@ function editAsignacion(id) {
             document.getElementById('assignedAt').value = new Date(asignacion.assignedAt).toISOString().slice(0, -1);  // Formato correcto
             formContainer.style.display = 'block';
             submitBtn.textContent = 'Actualizar Asignación';
-        });
+        })
+        .catch(error => console.error('Error al cargar asignación para editar:', error));
 }
 
 // Función para eliminar asignación
@@ -103,7 +106,8 @@ function deleteAsignacion(id) {
         fetch(`${apiUrl}/${id}`, {
             method: 'DELETE'
         })
-            .then(() => loadAsignaciones());
+            .then(() => loadAsignaciones())
+            .catch(error => console.error('Error al eliminar asignación:', error));
     }
 }
 
