@@ -6,7 +6,11 @@ using ProyectoDes4_5.BD;  // Asegúrate de tener el namespace correcto
 using ProyectoDes4_5.Repositorio;
 using ProyectoDes4_5.Interfaz;
 
-var builder = WebApplication.CreateBuilder(args);
+// Configurar opciones al crear el builder
+var builder = WebApplication.CreateBuilder(new WebApplicationOptions
+{
+    WebRootPath = "WEB" // Cambiar la carpeta de archivos estáticos a "WEB"
+});
 
 // Configurar los servicios necesarios
 builder.Services.AddControllersWithViews();
@@ -42,12 +46,12 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+app.UseStaticFiles(); // Sirve archivos desde la carpeta "WEB"
 app.UseRouting();
 app.UseCors("AllowAll");
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Asignaciones}/{action=Index}/{id?}");
 
 app.Run();
