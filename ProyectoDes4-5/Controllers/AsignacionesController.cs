@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ProyectoDes4_5.Interfaz;
-using ModelAsignaciones = ProyectoDes4_5.Models.Asignaciones; 
-using RepoAsignaciones = ProyectoDes4_5.Repositorio.Asignaciones;  
-using System.Linq;
+using ProyectoDes4_5.Models;  
+using ProyectoDes4_5.Repositorio; 
 
 namespace ProyectoDes4_5.Controllers
 {
@@ -19,7 +18,7 @@ namespace ProyectoDes4_5.Controllers
         public IActionResult Index()
         {
             var asignaciones = _asignacionesRepository.GetAllAsignaciones()
-                .Select(a => new ModelAsignaciones  // Usar alias ModelAsignaciones
+                .Select(a => new AsignacionesModel  // Usar alias AsignacionesModel para el modelo de vista
                 {
                     AssignmentId = a.AssignmentId,
                     TicketId = a.TicketId,
@@ -30,14 +29,14 @@ namespace ProyectoDes4_5.Controllers
             return View(asignaciones);
         }
 
-        // Ver detalles de una asignación
+        // Ver detalles de una asignaciï¿½n
         public IActionResult Details(int id)
         {
             var asignacion = _asignacionesRepository.GetAsignacionById(id);
             if (asignacion == null)
                 return NotFound();
 
-            var model = new ModelAsignaciones  // Usar alias ModelAsignaciones
+            var model = new AsignacionesModel  // Usar alias AsignacionesModel para el modelo de vista
             {
                 AssignmentId = asignacion.AssignmentId,
                 TicketId = asignacion.TicketId,
@@ -48,7 +47,7 @@ namespace ProyectoDes4_5.Controllers
             return View(model);
         }
 
-        // Crear nueva asignación
+        // Crear nueva asignaciï¿½n
         public IActionResult Create()
         {
             return View();
@@ -56,11 +55,11 @@ namespace ProyectoDes4_5.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(ModelAsignaciones model)  // Usar alias ModelAsignaciones
+        public IActionResult Create(AsignacionesModel model)  // Usar alias AsignacionesModel para el modelo de vista
         {
             if (ModelState.IsValid)
             {
-                var asignacion = new RepoAsignaciones  // Usar alias RepoAsignaciones
+                var asignacion = new Asignaciones  // Usar alias Asignaciones para el modelo de repositorio
                 {
                     TicketId = model.TicketId,
                     OperatorId = model.OperatorId,
@@ -73,14 +72,14 @@ namespace ProyectoDes4_5.Controllers
             return View(model);
         }
 
-        // Editar asignación
+        // Editar asignaciï¿½n
         public IActionResult Edit(int id)
         {
             var asignacion = _asignacionesRepository.GetAsignacionById(id);
             if (asignacion == null)
                 return NotFound();
 
-            var model = new ModelAsignaciones  // Usar alias ModelAsignaciones
+            var model = new AsignacionesModel  // Usar alias AsignacionesModel para el modelo de vista
             {
                 AssignmentId = asignacion.AssignmentId,
                 TicketId = asignacion.TicketId,
@@ -93,14 +92,14 @@ namespace ProyectoDes4_5.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, ModelAsignaciones model)  // Usar alias ModelAsignaciones
+        public IActionResult Edit(int id, AsignacionesModel model)  // Usar alias AsignacionesModel para el modelo de vista
         {
             if (id != model.AssignmentId)
                 return NotFound();
 
             if (ModelState.IsValid)
             {
-                var asignacion = new RepoAsignaciones  // Usar alias RepoAsignaciones
+                var asignacion = new Asignaciones  // Usar alias Asignaciones para el modelo de repositorio
                 {
                     AssignmentId = model.AssignmentId,
                     TicketId = model.TicketId,
@@ -114,14 +113,14 @@ namespace ProyectoDes4_5.Controllers
             return View(model);
         }
 
-        // Eliminar asignación
+        // Eliminar asignaciï¿½n
         public IActionResult Delete(int id)
         {
             var asignacion = _asignacionesRepository.GetAsignacionById(id);
             if (asignacion == null)
                 return NotFound();
 
-            var model = new ModelAsignaciones  // Usar alias ModelAsignaciones
+            var model = new AsignacionesModel  // Usar alias AsignacionesModel para el modelo de vista
             {
                 AssignmentId = asignacion.AssignmentId,
                 TicketId = asignacion.TicketId,

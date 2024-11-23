@@ -2,7 +2,7 @@
 
 namespace ProyectoDes4_5.Models
 {
-    public class Asignaciones
+    public class AsignacionesModel
     {
         public int AssignmentId { get; set; }
         public int TicketId { get; set; }

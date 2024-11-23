@@ -8,24 +8,15 @@
       "sslPort": 44328
     }
   },
-  "profiles": {
-    "http": {
-      "commandName": "Project",
-      "launchBrowser": true,
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "dotnetRunMessages": true,
-      "applicationUrl": "http://localhost:5156"
-    },
-    "https": {
-      "commandName": "Project",
-      "launchBrowser": true,
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "dotnetRunMessages": true,
-      "applicationUrl": "https://localhost:7071"
+"profiles": {
+    "ProyectoDes4-5": {
+        "commandName": "Project",
+        "launchBrowser": true,
+        "dotnetRunMessages": true,
+        "applicationUrl": "https://localhost:5001",
+        "environmentVariables": {
+            "ASPNETCORE_ENVIRONMENT": "Development"
+        }
+      }
     }
-  }
 }

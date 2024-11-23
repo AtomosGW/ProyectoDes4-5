@@ -1,5 +1,5 @@
 ﻿// Variables globales
-const apiUrl = 'https://localhost:7071/api/asignaciones'; // Cambié la URL para que sea correcta
+const apiUrl = 'https://localhost:5001/api/asignaciones'; // Asegúrate de que coincida con el puerto configurado
 const asignacionesTable = document.getElementById('asignacionesTable').getElementsByTagName('tbody')[0];
 const createBtn = document.getElementById('createBtn');
 const formContainer = document.getElementById('formContainer');
@@ -22,9 +22,12 @@ cancelBtn.addEventListener('click', () => {
 // Función para cargar asignaciones
 function loadAsignaciones() {
     fetch(apiUrl)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) throw new Error('Error al obtener las asignaciones');
+            return response.json();
+        })
         .then(data => {
-            asignacionesTable.innerHTML = '';  // Limpiar tabla
+            asignacionesTable.innerHTML = ''; // Limpiar tabla
             data.forEach(asignacion => {
                 let row = asignacionesTable.insertRow();
                 row.innerHTML = `
@@ -51,6 +54,12 @@ asignacionForm.addEventListener('submit', (event) => {
     const operatorId = document.getElementById('operatorId').value;
     const assignedAt = document.getElementById('assignedAt').value;
 
+    // Validación básica
+    if (!ticketId || !operatorId || !assignedAt) {
+        alert('Por favor, completa todos los campos antes de enviar.');
+        return;
+    }
+
     const asignacion = {
         assignmentId: assignmentId ? parseInt(assignmentId) : null,
         ticketId: parseInt(ticketId),
@@ -65,7 +74,8 @@ asignacionForm.addEventListener('submit', (event) => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(asignacion)
         })
-            .then(() => {
+            .then(response => {
+                if (!response.ok) throw new Error('Error al actualizar la asignación');
                 loadAsignaciones();
                 formContainer.style.display = 'none';
             })
@@ -77,7 +87,8 @@ asignacionForm.addEventListener('submit', (event) => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(asignacion)
         })
-            .then(() => {
+            .then(response => {
+                if (!response.ok) throw new Error('Error al crear la asignación');
                 loadAsignaciones();
                 formContainer.style.display = 'none';
             })
@@ -88,12 +99,15 @@ asignacionForm.addEventListener('submit', (event) => {
 // Función para editar asignación
 function editAsignacion(id) {
     fetch(`${apiUrl}/${id}`)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) throw new Error('Error al obtener la asignación para editar');
+            return response.json();
+        })
         .then(asignacion => {
             document.getElementById('assignmentId').value = asignacion.assignmentId;
             document.getElementById('ticketId').value = asignacion.ticketId;
             document.getElementById('operatorId').value = asignacion.operatorId;
-            document.getElementById('assignedAt').value = new Date(asignacion.assignedAt).toISOString().slice(0, -1);  // Formato correcto
+            document.getElementById('assignedAt').value = new Date(asignacion.assignedAt).toISOString().slice(0, -1); // Formato correcto
             formContainer.style.display = 'block';
             submitBtn.textContent = 'Actualizar Asignación';
         })
@@ -106,7 +120,10 @@ function deleteAsignacion(id) {
         fetch(`${apiUrl}/${id}`, {
             method: 'DELETE'
         })
-            .then(() => loadAsignaciones())
+            .then(response => {
+                if (!response.ok) throw new Error('Error al eliminar la asignación');
+                loadAsignaciones();
+            })
             .catch(error => console.error('Error al eliminar asignación:', error));
     }
 }
