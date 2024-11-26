@@ -2,46 +2,47 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
-using ProyectoDes4_5.BD;  // Aseg鷕ate de tener el namespace correcto
+using ProyectoDes4_5.BD;
 using ProyectoDes4_5.Repositorio;
 using ProyectoDes4_5.Interfaz;
+using ProyectoDes4_5.Services;
+using Microsoft.AspNetCore.Diagnostics;
 
-// Configurar opciones al crear el builder
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 {
-    WebRootPath = "WEB" // Cambiar la carpeta de archivos est醫icos a "WEB"
+    WebRootPath = "WEB" // Cambiar la carpeta de archivos est谩ticos a "WEB"
 });
 
-// Configurar los servicios necesarios
-builder.Services.AddControllersWithViews();
+// Configurar servicios necesarios
+builder.Services.AddControllers();  // Usamos AddControllers para una API sin vistas
 
 // Configurar CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll",
-        policy =>
-        {
-            policy.AllowAnyOrigin()
-                  .AllowAnyMethod()
-                  .AllowAnyHeader();
-        });
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
 });
 
-// Configurar el repositorio e inyecci髇 de dependencias
-builder.Services.AddScoped<IAsignacionesRepository, AsignacionesRepository>();
-
-// Configurar el contexto de la base de datos (ConexionDB)
+// Configurar el contexto de la base de datos
 builder.Services.AddDbContext<ConexionDB>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Registrar servicios gen茅ricos y espec铆ficos
+builder.Services.AddScoped(typeof(BaseService<>)); // Servicio gen茅rico para CRUD
+builder.Services.AddScoped<PedidoProductoService>(); // Servicio espec铆fico para PedidoProducto
+builder.Services.AddScoped<IAsignacionesRepository, AsignacionesRepository>(); // Repositorio para Asignaciones
+
+// Crear la aplicaci贸n
 var app = builder.Build();
 
-// Configurar la tuber韆 de middleware
+// Configuraci贸n de middleware
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
+    app.UseExceptionHandler("/Home/Error");  // No necesitamos esto si vamos a manejar los errores directamente
     app.UseHsts();
 }
 
@@ -50,8 +51,25 @@ app.UseStaticFiles(); // Sirve archivos desde la carpeta "WEB"
 app.UseRouting();
 app.UseCors("AllowAll");
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Asignaciones}/{action=Index}/{id?}");
+// Configuraci贸n para capturar errores y devolver una respuesta adecuada en formato JSON
+app.UseExceptionHandler(errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        context.Response.StatusCode = 500; // Internal Server Error
+        context.Response.ContentType = "application/json";
 
+        var exception = context.Features.Get<IExceptionHandlerFeature>()?.Error;
+        if (exception != null)
+        {
+            // Log del error
+            // Aqu铆 puedes usar un logger para registrar la excepci贸n
+            var result = new { message = exception.Message };
+            await context.Response.WriteAsJsonAsync(result);  // Devolvemos el mensaje de error en JSON
+        }
+    });
+});
+
+app.MapControllers();
+// Ejecutar la aplicaci贸n
 app.Run();

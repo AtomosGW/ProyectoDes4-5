@@ -21,7 +21,7 @@ namespace ProyectoDes4_5.Repositorio
 
         public Asignaciones GetAsignacionById(int id)
         {
-            return _context.Asignaciones.FirstOrDefault(a => a.AssignmentId == id);
+            return _context.Asignaciones.FirstOrDefault(a => a.Id == id);
         }
 
         public void InsertAsignacion(Asignaciones asignacion)

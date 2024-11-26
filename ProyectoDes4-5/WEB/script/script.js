@@ -1,5 +1,5 @@
 ﻿// Variables globales
-const apiUrl = 'https://localhost:5001/api/asignaciones'; // Asegúrate de que coincida con el puerto configurado
+const apiUrl = 'https://localhost:5001/api/asignaciones'; 
 const asignacionesTable = document.getElementById('asignacionesTable').getElementsByTagName('tbody')[0];
 const createBtn = document.getElementById('createBtn');
 const formContainer = document.getElementById('formContainer');

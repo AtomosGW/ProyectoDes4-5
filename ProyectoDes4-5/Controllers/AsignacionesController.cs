@@ -1,143 +1,72 @@
 using Microsoft.AspNetCore.Mvc;
-using ProyectoDes4_5.Interfaz;
-using ModelAsignaciones = ProyectoDes4_5.Models.Asignaciones;
 using ProyectoDes4_5.Repositorio;
-using System.Linq;
+using ProyectoDes4_5.Services;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ProyectoDes4_5.Controllers
 {
-    public class AsignacionesController : Controller
+    [ApiController]  // Indica que este es un controlador de API
+    [Route("api/[controller]")]  // Ruta base para este controlador
+    public class AsignacionesController : ControllerBase
     {
-        private readonly IAsignacionesRepository _asignacionesRepository;
+        private readonly BaseService<Asignaciones> _service;
 
-        public AsignacionesController(IAsignacionesRepository asignacionesRepository)
+        public AsignacionesController(BaseService<Asignaciones> service)
         {
-            _asignacionesRepository = asignacionesRepository;
+            _service = service;
         }
 
-        // Mostrar todas las asignaciones
-        public IActionResult Index()
+        // GET api/asignaciones
+        [HttpGet]
+        public async Task<IEnumerable<Asignaciones>> GetAll()
         {
-            var asignaciones = _asignacionesRepository.GetAllAsignaciones()
-                .Select(a => new ModelAsignaciones  // Usar alias ModelAsignaciones
-                {
-                    AssignmentId = a.AssignmentId,
-                    TicketId = a.TicketId,
-                    OperatorId = a.OperatorId,
-                    AssignedAt = a.AssignedAt
-                }).ToList();
-
-            return View(asignaciones);
+            return await _service.GetAllAsync();
         }
 
-        // Ver detalles de una asignación
-        public IActionResult Details(int id)
+        // GET api/asignaciones/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Asignaciones>> GetById(int id)
         {
-            var asignacion = _asignacionesRepository.GetAsignacionById(id);
-            if (asignacion == null)
-                return NotFound();
-
-            var model = new ModelAsignaciones  // Usar alias ModelAsignaciones
-            {
-                AssignmentId = asignacion.AssignmentId,
-                TicketId = asignacion.TicketId,
-                OperatorId = asignacion.OperatorId,
-                AssignedAt = asignacion.AssignedAt
-            };
-
-            return View(model);
+            var entity = await _service.GetByIdAsync(id);
+            if (entity == null) return NotFound();
+            return entity;  // Esto retornará un JSON
         }
 
-        // Crear nueva asignación
-        public IActionResult Create()
-        {
-            return View();
-        }
-
+        // POST api/asignaciones
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create(ModelAsignaciones model)  
+        public async Task<IActionResult> Create([FromBody] Asignaciones entity)
         {
-            if (ModelState.IsValid)
-            {
-                var asignacion = new AsignacionesRepository  
-                {
-                    TicketId = model.TicketId,
-                    OperatorId = model.OperatorId,
-                    AssignedAt = model.AssignedAt
-                };
+            if (entity == null)
+                return BadRequest("El objeto Asignaciones no puede ser nulo.");
 
-                _asignacionesRepository.InsertAsignacion(asignacion);
-                return RedirectToAction(nameof(Index));
-            }
-            return View(model);
+            await _service.CreateAsync(entity);
+            return CreatedAtAction(nameof(GetById), new { id = entity.Id }, entity);  // Responde con JSON
         }
 
-        // Editar asignación
-        public IActionResult Edit(int id)
+        // PUT api/asignaciones/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] Asignaciones entity)
         {
-            var asignacion = _asignacionesRepository.GetAsignacionById(id);
-            if (asignacion == null)
-                return NotFound();
+            if (entity == null)
+                return BadRequest("El objeto Asignaciones no puede ser nulo.");
 
-            var model = new ModelAsignaciones  // Usar alias ModelAsignaciones
-            {
-                AssignmentId = asignacion.AssignmentId,
-                TicketId = asignacion.TicketId,
-                OperatorId = asignacion.OperatorId,
-                AssignedAt = asignacion.AssignedAt
-            };
+            var existingEntity = await _service.GetByIdAsync(id);
+            if (existingEntity == null) return NotFound();
 
-            return View(model);
+            await _service.UpdateAsync(entity);
+            return NoContent();  // Responde con HTTP 204
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, ModelAsignaciones model)  // Usar alias ModelAsignaciones
+        // DELETE api/asignaciones/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
         {
-            if (id != model.AssignmentId)
-                return NotFound();
+            var entity = await _service.GetByIdAsync(id);
+            if (entity == null) return NotFound();
 
-            if (ModelState.IsValid)
-            {
-                var asignacion = new RepoAsignaciones  // Usar alias RepoAsignaciones
-                {
-                    AssignmentId = model.AssignmentId,
-                    TicketId = model.TicketId,
-                    OperatorId = model.OperatorId,
-                    AssignedAt = model.AssignedAt
-                };
-
-                _asignacionesRepository.UpdateAsignacion(asignacion);
-                return RedirectToAction(nameof(Index));
-            }
-            return View(model);
-        }
-
-        // Eliminar asignación
-        public IActionResult Delete(int id)
-        {
-            var asignacion = _asignacionesRepository.GetAsignacionById(id);
-            if (asignacion == null)
-                return NotFound();
-
-            var model = new ModelAsignaciones  // Usar alias ModelAsignaciones
-            {
-                AssignmentId = asignacion.AssignmentId,
-                TicketId = asignacion.TicketId,
-                OperatorId = asignacion.OperatorId,
-                AssignedAt = asignacion.AssignedAt
-            };
-
-            return View(model);
-        }
-
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
-        {
-            _asignacionesRepository.DeleteAsignacion(id);
-            return RedirectToAction(nameof(Index));
+            await _service.DeleteAsync(id);
+            return NoContent();  // Responde con HTTP 204
         }
     }
 }

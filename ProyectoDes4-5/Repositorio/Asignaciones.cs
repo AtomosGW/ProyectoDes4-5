@@ -4,10 +4,10 @@ namespace ProyectoDes4_5.Repositorio
 {
     public class Asignaciones
     {
-        public int AssignmentId { get; set; }  // Esta propiedad será la clave primaria
-        public int TicketId { get; set; }
-        public int OperatorId { get; set; }
-        public DateTime AssignedAt { get; set; }
+            public int Id { get; set; }
+            public int PedidoId { get; set; }
+            public Pedido Pedido { get; set; }
+            public int EmpleadoId { get; set; }
+            public Usuarios Empleado { get; set; }
     }
-
 }
