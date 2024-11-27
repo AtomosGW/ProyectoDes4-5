@@ -7,9 +7,9 @@ namespace ProyectoDes4_5.Repositorio
 {
     public class AsignacionesRepository : IAsignacionesRepository
     {
-        private readonly ConexionDB _context;
+        private readonly DBContext _context;
 
-        public AsignacionesRepository(ConexionDB context)
+        public AsignacionesRepository(DBContext context)
         {
             _context = context;
         }

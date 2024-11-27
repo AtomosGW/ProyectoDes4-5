@@ -6,7 +6,7 @@ namespace ProyectoDes4_5.Services
 {
     public class PedidoProductoService : BaseService<PedidoProductos>
     {
-        public PedidoProductoService(ConexionDB context) : base(context) { }
+        public PedidoProductoService(DBContext context) : base(context) { }
 
         public async Task<PedidoProductos> AddProductoToPedidoAsync(int pedidoId, int productoId, int cantidad)
         {

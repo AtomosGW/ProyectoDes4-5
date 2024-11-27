@@ -1,0 +1,61 @@
+﻿@model IEnumerable<ProyectoDes4_5.Repositorio.Asignaciones>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asignaciones</title>
+    <script src="~/WEB/script/script.js"></script>
+    <link rel="stylesheet" href="~/WEB/estilo/estilo.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Asignaciones</h1>
+
+        <!-- Verificar si el modelo es null o está vacío -->
+        @if (Model != null && Model.Any())
+        {
+            <table id="asignacionesTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Ticket ID</th>
+                        <th>Operator ID</th>
+                        <th>Asignado En</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var asignacion in Model)
+                    {
+                        <tr>
+                            <td>@asignacion.Id</td> <!-- Cambié AssignmentId a Id -->
+                            <td>@asignacion.pedidoId</td>
+                            <td>@asignacion.empleadoId</td>
+                            <td>
+                                @if (asignacion.Pedido != null)
+                                {
+                                    <span>@asignacion.Pedido.Fecha</span> <!-- Fecha del Pedido -->
+                                }
+                                else
+                                {
+                                    <span>No disponible</span>
+                                }
+                            </td>
+                            <td>
+                                <button onclick="editAsignacion(@asignacion.Id)">Editar</button>
+                                <button onclick="deleteAsignacion(@asignacion.Id)">Eliminar</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>No hay asignaciones disponibles.</p>
+        }
+    </div>
+</body>
+</html>

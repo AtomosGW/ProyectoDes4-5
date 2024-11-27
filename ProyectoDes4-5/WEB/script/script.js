@@ -1,11 +1,20 @@
 ﻿// Variables globales
-const apiUrl = 'https://localhost:5001/api/asignaciones'; 
+const apiUrl = 'https://localhost:5000/api/asignaciones';
 const asignacionesTable = document.getElementById('asignacionesTable').getElementsByTagName('tbody')[0];
 const createBtn = document.getElementById('createBtn');
 const formContainer = document.getElementById('formContainer');
 const asignacionForm = document.getElementById('asignacionForm');
 const cancelBtn = document.getElementById('cancelBtn');
 const submitBtn = document.getElementById('submitBtn');
+
+// Funciones de notificación
+function showError(message) {
+    alert(message); // Puedes personalizar para mostrar el mensaje en un contenedor en el DOM
+}
+
+function showSuccess(message) {
+    alert(message); // Igual que el error, se puede mostrar en un contenedor específico
+}
 
 // Eventos
 createBtn.addEventListener('click', () => {
@@ -42,7 +51,10 @@ function loadAsignaciones() {
                 `;
             });
         })
-        .catch(error => console.error('Error al cargar las asignaciones:', error));
+        .catch(error => {
+            console.error('Error al cargar las asignaciones:', error);
+            showError('No se pudieron cargar las asignaciones. Intenta nuevamente.');
+        });
 }
 
 // Función para crear o editar asignación
@@ -56,7 +68,7 @@ asignacionForm.addEventListener('submit', (event) => {
 
     // Validación básica
     if (!ticketId || !operatorId || !assignedAt) {
-        alert('Por favor, completa todos los campos antes de enviar.');
+        showError('Por favor, completa todos los campos antes de enviar.');
         return;
     }
 
@@ -67,33 +79,24 @@ asignacionForm.addEventListener('submit', (event) => {
         assignedAt: assignedAt
     };
 
-    if (assignmentId) {
-        // Actualizar asignación
-        fetch(`${apiUrl}/${assignmentId}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(asignacion)
+    const method = assignmentId ? 'PUT' : 'POST';
+    const url = assignmentId ? `${apiUrl}/${assignmentId}` : apiUrl;
+
+    fetch(url, {
+        method: method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(asignacion)
+    })
+        .then(response => {
+            if (!response.ok) throw new Error(method === 'POST' ? 'Error al crear la asignación' : 'Error al actualizar la asignación');
+            loadAsignaciones();
+            formContainer.style.display = 'none';
+            showSuccess(method === 'POST' ? 'Asignación creada con éxito' : 'Asignación actualizada con éxito');
         })
-            .then(response => {
-                if (!response.ok) throw new Error('Error al actualizar la asignación');
-                loadAsignaciones();
-                formContainer.style.display = 'none';
-            })
-            .catch(error => console.error('Error al actualizar asignación:', error));
-    } else {
-        // Crear nueva asignación
-        fetch(apiUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(asignacion)
-        })
-            .then(response => {
-                if (!response.ok) throw new Error('Error al crear la asignación');
-                loadAsignaciones();
-                formContainer.style.display = 'none';
-            })
-            .catch(error => console.error('Error al crear asignación:', error));
-    }
+        .catch(error => {
+            console.error(error);
+            showError('Hubo un error al procesar la solicitud.');
+        });
 });
 
 // Función para editar asignación
@@ -111,7 +114,10 @@ function editAsignacion(id) {
             formContainer.style.display = 'block';
             submitBtn.textContent = 'Actualizar Asignación';
         })
-        .catch(error => console.error('Error al cargar asignación para editar:', error));
+        .catch(error => {
+            console.error('Error al cargar asignación para editar:', error);
+            showError('Hubo un error al cargar la asignación para editar.');
+        });
 }
 
 // Función para eliminar asignación
@@ -123,8 +129,12 @@ function deleteAsignacion(id) {
             .then(response => {
                 if (!response.ok) throw new Error('Error al eliminar la asignación');
                 loadAsignaciones();
+                showSuccess('Asignación eliminada con éxito');
             })
-            .catch(error => console.error('Error al eliminar asignación:', error));
+            .catch(error => {
+                console.error('Error al eliminar asignación:', error);
+                showError('Hubo un error al eliminar la asignación.');
+            });
     }
 }
 
