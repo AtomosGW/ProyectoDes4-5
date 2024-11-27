@@ -36,14 +36,6 @@ namespace ProyectoDes4_5.api.Controllers {
             return Ok(result);
         }
 
-        // Acción API para crear una nueva asignación
-        [HttpPost]
-        public async Task<IActionResult> Create([FromBody] Asignaciones entity)
-        {
-            if (entity == null) return BadRequest("Datos inválidos.");
-            await _service.CreateAsync(entity);
-            return CreatedAtAction(nameof(GetById), new { id = entity.Id }, entity);
-        }
 
         // Acción API para actualizar una asignación
         [HttpPut("{id}")]
@@ -66,6 +58,24 @@ namespace ProyectoDes4_5.api.Controllers {
 
             await _service.DeleteAsync(id);
             return NoContent();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(Asignaciones entity)
+        {
+            if (entity == null) return BadRequest("Datos inválidos.");
+
+            // Validación si es necesario (por ejemplo, validar si el Empleado y Pedido existen)
+            if (string.IsNullOrEmpty(entity.EmpleadoId.ToString()) || string.IsNullOrEmpty(entity.PedidoId.ToString()))
+            {
+                return BadRequest("El empleado o el pedido no pueden estar vacíos.");
+            }
+
+            // Crear la nueva asignación
+            await _service.CreateAsync(entity);
+
+            // Redirigir después de la creación a la vista de todas las asignaciones
+            return RedirectToAction("Index");
         }
 
         [HttpGet("index")]

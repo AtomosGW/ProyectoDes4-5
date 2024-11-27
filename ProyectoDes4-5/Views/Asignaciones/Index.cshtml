@@ -13,10 +13,16 @@
     <div class="container">
         <h1>Asignaciones</h1>
 
+        <!-- Botón para crear una nueva asignación -->
+        <a href="@Url.Action("Create", "Asignaciones")">
+            <button class="btn btn-primary">Crear Nueva Asignación</button>
+        </a>
+
+
         <!-- Verificar si el modelo es null o está vacío -->
         @if (Model != null && Model.Any())
         {
-            <table id="asignacionesTable">
+            <table id="asignacionesTable" class="table">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -30,13 +36,13 @@
                     @foreach (var asignacion in Model)
                     {
                         <tr>
-                            <td>@asignacion.Id</td> <!-- Cambié AssignmentId a Id -->
+                            <td>@asignacion.Id</td>
                             <td>@asignacion.PedidoId</td>
                             <td>@asignacion.EmpleadoId</td>
                             <td>
                                 @if (asignacion.Pedido != null)
                                 {
-                                    <span>@asignacion.Pedido.Fecha</span> <!-- Fecha del Pedido -->
+                                    <span>@asignacion.Pedido.Fecha</span>
                                 }
                                 else
                                 {
