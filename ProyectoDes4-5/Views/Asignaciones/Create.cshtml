@@ -13,21 +13,21 @@
     <div class="container">
         <h1>Crear Nueva Asignación</h1>
 
-        <!-- Formulario de creación de asignación con método POST -->
-        <form asp-action="Create" method="post">
+        <!-- Formulario de creación de asignación -->
+        <form asp-controller="Asignaciones" asp-action="Create" method="post">
             <div class="form-group">
-                <label for="EmpleadoId">Empleado</label>
-                <input type="text" id="EmpleadoId" name="EmpleadoId" class="form-control" required />
+                <label for="EmpleadoId">Empleado ID</label>
+                <input type="text" id="EmpleadoId" name="EmpleadoId" class="form-control" value="@Model.EmpleadoId" required />
             </div>
 
             <div class="form-group">
                 <label for="PedidoId">Pedido ID</label>
-                <input type="text" id="PedidoId" name="PedidoId" class="form-control" required />
+                <input type="text" id="PedidoId" name="PedidoId" class="form-control" value="@Model.PedidoId" required />
             </div>
 
             <div class="form-group">
-                <label for="FechaAsignacion">Fecha Asignación</label>
-                <input type="date" id="FechaAsignacion" name="FechaAsignacion" class="form-control" required />
+                <label for="FechaAsignacion">Fecha de Asignación</label>
+                <input type="date" id="FechaAsignacion" name="FechaAsignacion" class="form-control" value="@Model.FechaAsignacion?.ToString("yyyy-MM-dd")" required />
             </div>
 
             <button type="submit" class="btn btn-primary">Crear Asignación</button>

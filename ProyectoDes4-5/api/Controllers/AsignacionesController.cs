@@ -61,22 +61,31 @@ namespace ProyectoDes4_5.api.Controllers {
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Asignaciones entity)
+        [Route("Create")]
+        public async Task<IActionResult> Create([FromForm] Asignaciones entity)
         {
-            if (entity == null) return BadRequest("Datos inválidos.");
-
-            // Validación si es necesario (por ejemplo, validar si el Empleado y Pedido existen)
-            if (string.IsNullOrEmpty(entity.EmpleadoId.ToString()) || string.IsNullOrEmpty(entity.PedidoId.ToString()))
+            if (entity == null)
             {
-                return BadRequest("El empleado o el pedido no pueden estar vacíos.");
+                return BadRequest("Datos inválidos.");
             }
 
-            // Crear la nueva asignación
-            await _service.CreateAsync(entity);
+            // Log para depuración
+            Console.WriteLine($"EmpleadoId: {entity.EmpleadoId}, PedidoId: {entity.PedidoId}");
 
-            // Redirigir después de la creación a la vista de todas las asignaciones
-            return RedirectToAction("Index");
+            try
+            {
+                await _service.CreateAsync(entity);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error interno: {ex.Message}");
+            }
+
+            return CreatedAtAction(nameof(GetById), new { id = entity.Id }, entity);
         }
+
+
+
 
         [HttpGet("index")]
         public async Task<IActionResult> Index()
