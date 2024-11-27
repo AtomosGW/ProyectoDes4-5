@@ -2,10 +2,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
-using ProyectoDes4_5.BD;
 using ProyectoDes4_5.Repositorio;
 using ProyectoDes4_5.Interfaz;
 using ProyectoDes4_5.Services;
+using ProyectoDes4_5.Models;
 using Microsoft.AspNetCore.Diagnostics;
 
 
@@ -29,7 +29,7 @@ builder.Services.AddCors(options =>
 });
 
 // Configuración del contexto de base de datos
-builder.Services.AddDbContext<DBContext>(options =>
+builder.Services.AddDbContext<WebPedidosContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Registrar otros servicios

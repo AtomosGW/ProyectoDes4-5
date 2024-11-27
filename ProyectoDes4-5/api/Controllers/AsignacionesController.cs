@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProyectoDes4_5.Repositorio;
 using ProyectoDes4_5.Services;
+using ProyectoDes4_5.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

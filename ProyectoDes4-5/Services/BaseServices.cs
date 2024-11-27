@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ProyectoDes4_5.BD;
+using ProyectoDes4_5.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,9 +8,9 @@ namespace ProyectoDes4_5.Services
 {
     public class BaseService<T> where T : class
     {
-        protected readonly DBContext _context;
+        protected readonly WebPedidosContext _context;
 
-        public BaseService(DBContext context)
+        public BaseService(WebPedidosContext context)
         {
             _context = context;
         }

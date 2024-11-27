@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ProyectoDes4_5.Repositorio.Asignaciones>
+﻿@model IEnumerable<ProyectoDes4_5.Models.Asignaciones>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -31,8 +31,8 @@
                     {
                         <tr>
                             <td>@asignacion.Id</td> <!-- Cambié AssignmentId a Id -->
-                            <td>@asignacion.pedidoId</td>
-                            <td>@asignacion.empleadoId</td>
+                            <td>@asignacion.PedidoId</td>
+                            <td>@asignacion.EmpleadoId</td>
                             <td>
                                 @if (asignacion.Pedido != null)
                                 {

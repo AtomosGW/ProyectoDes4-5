@@ -1,4 +1,5 @@
 ﻿using ProyectoDes4_5.Repositorio;
+using ProyectoDes4_5.Models;
 using System.Collections.Generic;
 
 namespace ProyectoDes4_5.Interfaz

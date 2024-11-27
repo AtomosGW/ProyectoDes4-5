@@ -1,5 +1,5 @@
 ﻿using ProyectoDes4_5.Interfaz;
-using ProyectoDes4_5.BD;
+using ProyectoDes4_5.Models;
 using System.Linq;
 using System.Collections.Generic;
 
@@ -7,9 +7,9 @@ namespace ProyectoDes4_5.Repositorio
 {
     public class AsignacionesRepository : IAsignacionesRepository
     {
-        private readonly DBContext _context;
+        private readonly WebPedidosContext _context;
 
-        public AsignacionesRepository(DBContext context)
+        public AsignacionesRepository(WebPedidosContext context)
         {
             _context = context;
         }
